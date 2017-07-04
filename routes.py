@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from forms import DownloadForm
 from datetime import timedelta
 from download_video import Download
-
+import os
 
 app = Flask(__name__)
 
@@ -22,10 +22,16 @@ def home():
         if not form.validate():
             return render_template('home.html', form=form)
         else:
-            video.download()
-            filename = video.name + '.mp4'
-            download_url = url_for('download', filename=filename,  _external=True)
-            return render_template('home.html', form=form, download_url=download_url)
+            # Get files under file folder
+            files = os.listdir('file/')
+            video_name = video.get_name() + '.mp4'
+            if video_name not in files:
+                video.download()
+                download_url = url_for('download', filename=video_name,  _external=True)
+                return render_template('home.html', form=form, download_url=download_url)
+            else:
+                download_url = url_for('download', filename=video_name, _external=True)
+                return render_template('home.html', form=form, download_url=download_url)
 
     elif request.method == 'GET':
         return render_template('home.html', form=form)
