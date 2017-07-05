@@ -41,9 +41,16 @@ def download(filename):
     return send_from_directory('file',
                                filename, as_attachment=True)
 
+@app.route('/<filename>')
+def music(filename):
+    return render_template('music.html',
+                        title=filename,
+                        music_file=filename)
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=5000)
+    app.run('0.0.0.0', port=8080)
