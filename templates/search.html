@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<title xmlns="http://www.w3.org/1999/html">Search User</title>
+
+<div class="form-div" >
+    <form method="POST" action="/search">
+    {{ form.hidden_tag() }}
+
+    {{ form.user_acct.label }}:
+    <div class="error-msg">
+    {% if form.user_acct.errors %}
+     {% for error in form.user_acct.errors %}
+      {{ error }}
+     {% endfor %}
+    {% endif %}
+    </div>
+    {{ form.user_acct }}
+
+    {{ form.get(class="buttom") }}
+    </form>
+</div>
+
+<div class="div-bucket">
+{% if video_list %}
+
+    {% for item in video_list %}
+    <div class="">
+        {{ item[0] }}
+        <a href="{{ item[1] }}" class="bucket"> {{ item[1] }} </a>
+        Upload on {{ item[2] }}
+        <a href="{{ url_for('search') }}" class="bucket"> Download </a>
+      <br> <br>
+    </div>
+    {% endfor %}
+
+{% endif %}
+</div>
+
+
+{% endblock %}

@@ -1,6 +1,7 @@
 argparse==1.4.0
 blinker==1.4
 boto3==1.4.4
+BeautifulSoup4==4.5.3
 click==6.7
 Flask==0.12.2
 Flask-Login==0.4.0
@@ -14,6 +15,7 @@ MarkupSafe==1.0
 ordereddict==1.1
 psycopg2==2.7.1
 pytube==6.3.0
+requests==2.12.4
 SQLAlchemy==1.1.11
 Werkzeug==0.12.2
 WTForms==2.1
