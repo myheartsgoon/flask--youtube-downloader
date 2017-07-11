@@ -24,18 +24,31 @@ class Get_user_videos():
 class Download():
     def __init__(self, link):
         self.link = link
+        self.extension = ''
+        self.resolutions = set()
 
     def get_name(self):
         yt = YouTube(self.link)
         return yt.filename
 
-    def download(self):
+    def download(self, format, quality):
         yt = YouTube(self.link)
-        video = yt.get('mp4', '360p')
+        video = yt.get(format, quality)
         video.download('file/')
+
+    def get_resolution(self):
+        yt = YouTube(self.link)
+        all_reso = yt.get_videos()
+        for each in all_reso:
+            self.resolutions.add(each.resolution)
+        self.resolutions = list(self.resolutions)
+        self.resolutions.sort()
+        return self.resolutions
+
+
 
 
 
 #------------------test part----------------
-new = Get_user_videos('marquesbrownlee')
-new.get_infos()
+#new = Get_user_videos('marquesbrownlee')
+#new.get_infos()

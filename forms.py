@@ -1,11 +1,15 @@
 from flask_wtf import Form
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 
-class DownloadForm(Form):
+class GenerateForm(Form):
     youtube_url = StringField('Youtube URL', validators=[DataRequired('Please enter a youtube video URL')])
-    download = SubmitField('Download')
+    generate = SubmitField('Submit')
 
 class SearchUserForm(Form):
     user_acct = StringField('User Account', validators=[DataRequired('Please enter a user account')])
     get = SubmitField('Get videos')
+
+class DownloadForm(Form):
+    quality = SelectField('Quality')
+    download = SubmitField('Submit')

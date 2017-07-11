@@ -17,15 +17,17 @@
     </div>
     {{ form.youtube_url }}
 
-    {{ form.download(class="buttom") }}
+    {{ form.generate(class="buttom") }}
+
     </form>
 </div>
 
 <div class="div-bucket">
-{% if download_url %}
-    <a href="{{ download_url }}" class="bucket"> {{ download_url }} </a>
+{% if resolutions %}
+  {% for quality in resolutions %}
+    <a href="{{ url_for('download', quality=quality, url=url) }}" class="bucket"> {{ quality }} </a>
+  {% endfor %}
 {% endif %}
 </div>
-
 
 {% endblock %}
