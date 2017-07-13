@@ -23,9 +23,9 @@
 </div>
 
 <div class="div-bucket">
-{% if resolutions %}
-  {% for quality in resolutions %}
-    <a href="{{ url_for('download', quality=quality, url=url) }}" class="bucket"> {{ quality }} </a>
+{% if quality %}
+  {% for each in quality %}
+    <p> <a href="{{ url_for('download', extension=each[0], resolution=each[1], url=url) }}" class="bucket"> {{ each[0] }} {{ each[1] }} </a> </p>
   {% endfor %}
 {% endif %}
 </div>

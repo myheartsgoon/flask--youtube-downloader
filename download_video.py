@@ -31,19 +31,16 @@ class Download():
         yt = YouTube(self.link)
         return yt.filename
 
-    def download(self, format, quality):
+    def download(self, extension, resolution):
         yt = YouTube(self.link)
-        video = yt.get(format, quality)
+        video = yt.get(extension, resolution)
         video.download('file/')
 
     def get_resolution(self):
         yt = YouTube(self.link)
-        all_reso = yt.get_videos()
-        for each in all_reso:
-            self.resolutions.add(each.resolution)
-        self.resolutions = list(self.resolutions)
-        self.resolutions.sort()
-        return self.resolutions
+        all_info = yt.get_videos()
+        quality = [(i.extension, i.resolution) for i in all_info]
+        return quality
 
 
 

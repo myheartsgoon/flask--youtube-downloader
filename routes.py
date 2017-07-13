@@ -27,8 +27,10 @@ def home():
         else:
             url = form.youtube_url.data
             video = Download(url)
-            all_resolutions = video.get_resolution()
-            return render_template('home.html', form=form, resolutions=all_resolutions, url=url)
+            quality = video.get_resolution()
+            extension = quality[0]
+            resolution = quality[1]
+            return render_template('home.html', form=form, quality=quality, url=url)
             #return redirect(url_for('download', quality=all_resolutions))
 
             '''
@@ -49,13 +51,14 @@ def home():
 
 @app.route('/download', methods=['GET'])
 def download():
-    quality = request.args.get('quality')
+    extension = request.args.get('extension')
+    resolution = request.args.get('resolution')
     url = request.args.get('url')
     files = os.listdir('file/')
     video = Download(url)
-    video_name = video.get_name() + '.mp4'
+    video_name = video.get_name() + '.' + extension
     if video_name not in files:
-        video.download(quality)
+        video.download(extension, resolution)
         download_url = url_for('downloadfile', filename=video_name, _external=True)
         return render_template('download.html', download_url=download_url)
     else:
