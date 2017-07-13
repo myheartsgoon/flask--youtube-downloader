@@ -28,9 +28,8 @@ def home():
             url = form.youtube_url.data
             video = Download(url)
             quality = video.get_resolution()
-            extension = quality[0]
-            resolution = quality[1]
-            return render_template('home.html', form=form, quality=quality, url=url)
+            name = video.get_name()
+            return render_template('home.html', form=form, quality=quality, name=name, url=url)
             #return redirect(url_for('download', quality=all_resolutions))
 
             '''
