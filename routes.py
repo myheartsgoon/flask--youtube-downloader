@@ -55,13 +55,14 @@ def download():
     url = request.args.get('url')
     files = os.listdir('file/')
     video = Download(url)
-    video_name = video.get_name() + '.' + extension
-    if video_name not in files:
-        video.download(extension, resolution)
-        download_url = url_for('downloadfile', filename=video_name, _external=True)
+    video_name = (video.get_name() + '(%s)') % resolution
+    filename = video_name + '.' + extension
+    if filename not in files:
+        video.download(extension, resolution, video_name)
+        download_url = url_for('downloadfile', filename=filename, _external=True)
         return render_template('download.html', download_url=download_url)
     else:
-        download_url = url_for('downloadfile', filename=video_name, _external=True)
+        download_url = url_for('downloadfile', filename=filename, _external=True)
         return render_template('download.html', download_url=download_url)
 
 

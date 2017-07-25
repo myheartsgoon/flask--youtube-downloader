@@ -31,8 +31,9 @@ class Download():
         yt = YouTube(self.link)
         return yt.filename
 
-    def download(self, extension, resolution):
+    def download(self, extension, resolution, filename):
         yt = YouTube(self.link)
+        yt.filename = filename
         video = yt.get(extension, resolution)
         video.download('file/')
 
