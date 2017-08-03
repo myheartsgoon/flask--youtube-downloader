@@ -1,8 +1,9 @@
 # coding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, Response
-from forms import GenerateForm, SearchUserForm, DownloadForm
+from forms import GenerateForm, SearchUserForm, ConvertForm
 from datetime import timedelta
 from download_video import Download, Get_user_videos
+from convert import convert_page_to_pdf
 import os
 import time
 
@@ -32,19 +33,6 @@ def home():
             return render_template('home.html', form=form, quality=quality, name=name, url=url)
             #return redirect(url_for('download', quality=all_resolutions))
 
-            '''
-            files = os.listdir('file/')
-            video = Download(form.youtube_url.data)
-            video_name = video.get_name() + '.mp4'
-            if video_name not in files:
-                video.download()
-                download_url = url_for('downloadfile', filename=video_name,  _external=True)
-                return render_template('home.html', form=form, download_url=download_url)
-            else:
-                download_url = url_for('downloadfile', filename=video_name, _external=True)
-                return render_template('home.html', form=form, download_url=download_url)
-            '''
-
     elif request.method == 'GET':
         return render_template('home.html', form=form)
 
@@ -65,20 +53,23 @@ def download():
         download_url = url_for('downloadfile', filename=filename, _external=True)
         return render_template('download.html', download_url=download_url)
 
-
-    '''
-    form = DownloadForm()
+@app.route('/convert', methods=['GET', 'POST'])
+def convert():
+    form = ConvertForm()
     if request.method == 'POST':
         if not form.validate():
-            return render_template('download.html', form=form)
+            return render_template('convert.html', form=form)
         else:
-
-            return render_template('download.html', form=form)
+            url = form.web_url.data
+            result = convert_page_to_pdf(url)
+            if result == True:
+                pdf_link = url_for('downloadfile', filename='output.pdf', _external=True)
+                return render_template('convert.html', form=form, pdf_link=pdf_link)
+            else:
+                return render_template('convert.html', form=form, failed=True)
 
     elif request.method == 'GET':
-        return render_template('download.html', form=form)
-
-    '''
+        return render_template('convert.html', form=form)
 
 
 
@@ -99,9 +90,7 @@ def search():
         return render_template('search.html', form=form)
 
 
-
-
-
+#---------Download files--------------
 @app.route('/file/<path:filename>')
 def downloadfile(filename):
     return send_from_directory('file',

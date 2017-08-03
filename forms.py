@@ -13,3 +13,7 @@ class SearchUserForm(Form):
 class DownloadForm(Form):
     quality = SelectField('Quality')
     download = SubmitField('Submit')
+
+class ConvertForm(Form):
+    web_url = StringField('Web URL', validators=[DataRequired('Please enter a valid web URL')])
+    convert = SubmitField('Submit')

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<title xmlns="http://www.w3.org/1999/html">Home</title>
+
+<div class="form-div" >
+    <form method="POST" action="/convert">
+    {{ form.hidden_tag() }}
+
+    {{ form.web_url.label }}:
+    <div class="error-msg">
+    {% if form.web_url.errors %}
+     {% for error in form.web_url.errors %}
+      {{ error }}
+     {% endfor %}
+    {% endif %}
+    </div>
+    <div class="error-msg">
+    {% if failed %}
+     <p>Convert failed, please try again!</p>
+    {% endif %}
+    </div>
+
+    {{ form.web_url }}
+
+    {{ form.convert(class="buttom") }}
+
+    </form>
+</div>
+
+<div class="div-bucket">
+{% if pdf_link %}
+    <p>Download link:</p>
+    <a href="{{ pdf_link }}" class="bucket"> {{ pdf_link }} </a>
+{% endif %}
+</div>
+</div>
+
+{% endblock %}
