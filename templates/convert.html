@@ -3,37 +3,44 @@
 {% block content %}
 <title xmlns="http://www.w3.org/1999/html">Home</title>
 
-<div class="form-div" >
-    <form method="POST" action="/convert">
-    {{ form.hidden_tag() }}
-
-    {{ form.web_url.label }}:
-    <div class="error-msg">
-    {% if form.web_url.errors %}
-     {% for error in form.web_url.errors %}
-      {{ error }}
-     {% endfor %}
-    {% endif %}
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <form method="POST" action="/convert">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    {{ form.web_url.label }}:
+                    {% if form.web_url.errors %}
+                    <div class="alert alert-warning" role="alert">
+                     {% for error in form.web_url.errors %}
+                      {{ error }}
+                     {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if failed %}
+                    <div class="alert alert-danger" role="alert">
+                     <p>Convert failed, please try again!</p>
+                    </div>
+                    {% endif %}
+                    {{ form.web_url(class="form-control") }}
+                </div>
+                {{ form.convert(class="btn btn-primary btn-lg") }}
+            </form>
+        </div>
     </div>
-    <div class="error-msg">
-    {% if failed %}
-     <p>Convert failed, please try again!</p>
-    {% endif %}
+
+    <div class="row top-buffer">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            {% if pdf_link %}
+                <ul class="list-group">
+                        <li class="list-group-item">
+                            <p><strong>Download link:</strong></p>
+                            <a href="{{ pdf_link }}" class="bucket"> {{ pdf_link }} </a>
+                        </li>
+                    </ul>
+            {% endif %}
+         </div>
     </div>
-
-    {{ form.web_url }}
-
-    {{ form.convert(class="buttom") }}
-
-    </form>
-</div>
-
-<div class="div-bucket">
-{% if pdf_link %}
-    <p>Download link:</p>
-    <a href="{{ pdf_link }}" class="bucket"> {{ pdf_link }} </a>
-{% endif %}
-</div>
 </div>
 
 {% endblock %}

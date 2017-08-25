@@ -3,39 +3,46 @@
 {% block content %}
 <title xmlns="http://www.w3.org/1999/html">Search User</title>
 
-<div class="form-div" >
-    <form method="POST" action="/search">
-    {{ form.hidden_tag() }}
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <form method="POST" action="/search">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    {{ form.user_acct.label }}:
+                    {% if form.user_acct.errors %}
+                    <div class="alert alert-warning" role="alert">
+                     {% for error in form.user_acct.errors %}
+                      {{ error }}
+                     {% endfor %}
+                    </div>
+                    {% endif %}
+                    {{ form.user_acct(class="form-control") }}
+                </div>
+                {{ form.get(class="btn btn-primary btn-lg") }}
+            </form>
 
-    {{ form.user_acct.label }}:
-    <div class="error-msg">
-    {% if form.user_acct.errors %}
-     {% for error in form.user_acct.errors %}
-      {{ error }}
-     {% endfor %}
-    {% endif %}
+        </div>
     </div>
-    {{ form.user_acct }}
 
-    {{ form.get(class="buttom") }}
-    </form>
-</div>
-
-<div class="div-bucket">
-{% if video_list %}
-
-    {% for item in video_list %}
-    <div class="">
-        {{ item[0] }}
-        <a href="{{ item[1] }}" class="bucket"> {{ item[1] }} </a>
-        Upload on {{ item[2] }}
-        <a href="{{ url_for('search') }}" class="bucket"> Download </a>
-      <br> <br>
+    <div class="row top-buffer">
+        {% if video_list %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <ul class="list-group">
+                {% for item in video_list %}
+                    <li class="list-group-item">
+                    <!--<span class="badge">14</span>-->
+                        <p><strong>{{ item[0] }}</strong></p>
+                        <p><a href="{{ item[1] }}" class=""> {{ item[1] }}</a>
+                        Upload {{ item[2] }}
+                        </p>
+                        <p><a href="{{ url_for('search') }}" class=""> Download </a></p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
-    {% endfor %}
-
-{% endif %}
 </div>
-
 
 {% endblock %}

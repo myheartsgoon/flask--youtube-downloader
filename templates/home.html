@@ -1,34 +1,43 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title xmlns="http://www.w3.org/1999/html">Home</title>
+<title>Home</title>
 
-<div class="form-div" >
-    <form method="POST" action="/">
-    {{ form.hidden_tag() }}
-
-    {{ form.youtube_url.label }}:
-    <div class="error-msg">
-    {% if form.youtube_url.errors %}
-     {% for error in form.youtube_url.errors %}
-      {{ error }}
-     {% endfor %}
-    {% endif %}
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <form method="POST" action="/">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    {{ form.youtube_url.label }}:
+                    {% if form.youtube_url.errors %}
+                    <div class="alert alert-warning" role="alert">
+                     {% for error in form.youtube_url.errors %}
+                      {{ error }}
+                     {% endfor %}
+                    </div>
+                    {% endif %}
+                    {{ form.youtube_url(class="form-control") }}
+                </div>
+                {{ form.generate(class="btn btn-primary btn-lg") }}
+            </form>
+        </div>
     </div>
-    {{ form.youtube_url }}
 
-    {{ form.generate(class="buttom") }}
-
-    </form>
-</div>
-
-
-<div class="div-bucket">
-{% if quality %}
-  {% for each in quality %}
-    <p> <a href="{{ url_for('download', extension=each[0], resolution=each[1], url=url) }}" class="bucket"> {{ each[0] }} {{ each[1] }} </a> </p>
-  {% endfor %}
-{% endif %}
+    <div class="row top-buffer">
+        {% if quality %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <ul class="list-group">
+                <p><strong>Available Quality:</strong></p>
+                {% for each in quality %}
+                    <li class="list-group-item">
+                        <p> <a href="{{ url_for('download', extension=each[0], resolution=each[1], url=url) }}" class="bucket"> {{ each[0] }} {{ each[1] }} </a> </p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}

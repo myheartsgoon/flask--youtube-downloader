@@ -8,7 +8,7 @@ class GenerateForm(Form):
 
 class SearchUserForm(Form):
     user_acct = StringField('User Account', validators=[DataRequired('Please enter a user account')])
-    get = SubmitField('Get videos')
+    get = SubmitField('Submit')
 
 class DownloadForm(Form):
     quality = SelectField('Quality')
@@ -16,4 +16,4 @@ class DownloadForm(Form):
 
 class ConvertForm(Form):
     web_url = StringField('Web URL', validators=[DataRequired('Please enter a valid web URL')])
-    convert = SubmitField('Submit')
+    convert = SubmitField('Convert')
