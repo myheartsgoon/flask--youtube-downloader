@@ -1,18 +1,31 @@
 # coding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, Response
-from forms import GenerateForm, SearchUserForm, ConvertForm
+from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm
+from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from datetime import timedelta
-from download_video import Download, Get_user_videos
+from download_video import Download, Get_user_videos, Search_video
 from convert import convert_page_to_pdf
 import os
 import time
 
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = "login"
+login_manager.login_message = "Please login to access this page."
+login_manager.init_app(app)
+
 
 @app.before_request
 def make_session_permant():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=5)
+
+'''
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+'''
 
 app.secret_key = 'development-key'
 
@@ -74,20 +87,38 @@ def convert():
 
 
 #--------Search user acoount----------
-@app.route('/search', methods=['GET', 'POST'])
-def search():
+@app.route('/search_user', methods=['GET', 'POST'])
+def search_user():
     form = SearchUserForm()
     if request.method == 'POST':
         if not form.validate():
-            return render_template('search.html', form=form)
+            return render_template('search_user.html', form=form)
         else:
             user = Get_user_videos(form.user_acct.data)
             user.get_infos()
             group = user.group
-            return render_template('search.html', form=form, video_list=group)
+            return render_template('search_user.html', form=form, video_list=group)
 
     elif request.method == 'GET':
-        return render_template('search.html', form=form)
+        return render_template('search_user.html', form=form)
+
+
+@app.route('/search_video', methods=['GET', 'POST'])
+def search_video():
+    form = SearchVideoForm()
+    if request.method == 'POST':
+        if not form.validate():
+            return render_template('search_vid.html', form=form)
+        else:
+            video = Search_video()
+            video.search(form.keyword.data)
+            video_group = video.vid_group
+            return render_template('search_vid.html', form=form, search_result=video_group)
+
+    elif request.method == 'GET':
+        return render_template('search_vid.html', form=form)
+
+
 
 
 #---------Download files--------------
@@ -95,12 +126,6 @@ def search():
 def downloadfile(filename):
     return send_from_directory('file',
                                filename, as_attachment=True)
-
-@app.route('/<filename>')
-def music(filename):
-    return render_template('music.html',
-                        title=filename,
-                        music_file=filename)
 
 
 '''
@@ -122,7 +147,9 @@ def progress():
 '''
 
 
-
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 
 @app.errorhandler(404)

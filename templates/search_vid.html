@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<title>Search Video</title>
+
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <form method="POST" action="/search_video">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    {{ form.keyword.label }}:
+                    {% if form.keyword.errors %}
+                    <div class="alert alert-warning" role="alert">
+                     {% for error in form.keyword.errors %}
+                      {{ error }}
+                     {% endfor %}
+                    </div>
+                    {% endif %}
+                    {{ form.keyword(class="form-control") }}
+                </div>
+                {{ form.search(class="btn btn-primary btn-lg") }}
+            </form>
+
+        </div>
+    </div>
+
+    <div class="row top-buffer">
+        {% if search_result %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <ul class="list-group">
+                {% for item in search_result %}
+                    <li class="list-group-item">
+                    <!--<span class="badge">14</span>-->
+                        <p><strong>{{ item[0] }}</strong>
+                        {% if item[2] == 'Youtube_Channel' %}
+                        <span class="label label-primary">Channel</span>
+                        {% endif %}
+                        </p>
+                        <p><a href="{{ item[1] }}" class=""> {{ item[1] }}</a></p>
+                        {% if not item[2] == 'Youtube_Channel' %}
+                        <p>Uploaded by {{ item[2] }}</p>
+                        <p><a href="{{ url_for('search_video') }}" class=""> Download </a></p>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

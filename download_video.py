@@ -19,7 +19,7 @@ class Get_user_videos():
             self.link.append('https://www.youtube.com' + item.select('a')[1]['href'])
             self.title.append(item.select('a')[1]['title'])
             self.time.append(item.select('.yt-lockup-meta-info')[0].select('li')[1].text)
-            self.group = zip(self.title, self.link, self.time)
+        self.group = zip(self.title, self.link, self.time)
 
 class Download():
     def __init__(self, link):
@@ -44,9 +44,35 @@ class Download():
         return quality
 
 
+class Search_video():
+    def __init__(self):
+        self.vid_url = []
+        self.vid_title = []
+        self.vid_author = []
+        self.vid_group = []
+
+    def search(self, keyword):
+        url = "https://www.youtube.com/results?search_query=" + keyword
+        res = requests.get(url)
+        soup = BeautifulSoup(res.text, "html.parser")
+        item_list = soup.select('.item-section')[0].select('.yt-lockup')
+        for item in item_list:
+            vid_url = 'https://www.youtube.com' + item.select('a')[1]['href']
+            if vid_url.startswith('https://www.youtube.com/watch'):
+                self.vid_author.append(item.select('a')[2].text)
+            elif vid_url.startswith('https://www.youtube.com/channel'):
+                self.vid_author.append('Youtube_Channel')
+            else:
+                continue
+            self.vid_url.append(vid_url)
+            self.vid_title.append(item.select('a')[1]['title'])
+        self.vid_group = zip(self.vid_title, self.vid_url, self.vid_author)
+
+
 
 
 
 #------------------test part----------------
 #new = Get_user_videos('marquesbrownlee')
 #new.get_infos()
+
