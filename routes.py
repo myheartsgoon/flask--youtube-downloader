@@ -1,5 +1,6 @@
 # coding=utf-8
-from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, Response
+from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, \
+    Response, make_response
 from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from datetime import timedelta
@@ -124,9 +125,10 @@ def search_video():
 #---------Download files--------------
 @app.route('/file/<path:filename>')
 def downloadfile(filename):
-    return send_from_directory('file',
-                               filename, as_attachment=True)
-
+    response = make_response(send_from_directory('file',
+                               filename, as_attachment=True))
+    response.headers["Content-Disposition"] = "attachment; filename={}".format(filename.encode().decode('latin-1'))
+    return response
 
 '''
 #---------Demo for progress---------
