@@ -11,11 +11,13 @@
                 <p><strong>Your Download History:</strong></p>
                 {% for download in download_history %}
                     <li class="list-group-item">
-                        <p>  <a href="{{ download.url }}"> {{ download.title }} </a></p>
+                        <p><a href="{{ download.url }}"> {{ download.title }} </a></p>
                     </li>
                 {% endfor %}
             </ul>
         </div>
+        {% else %}
+        <p class="lead">You haven't download any videos yet.</p>
         {% endif %}
     </div>
 </div>
