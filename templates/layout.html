@@ -46,26 +46,23 @@
               </ul>
               <form class="navbar-form navbar-right">
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search">
+                  <input type="text" class="form-control" placeholder="Search video">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
               </form>
               <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User <span class="caret"></span></a>
                   {% if not current_user.is_authenticated %}
-                      <ul class="dropdown-menu">
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Sign Up</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="{{ url_for('about') }}">About</a></li>
-                      </ul>
+                  <li><a href="{{ url_for('login') }}">Login</a></li>
+                  <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
                   {% else %}
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current_user.firstname }} {{ current_user.lastname }}<span class="caret"></span></a>
                        <ul class="dropdown-menu">
-                        <li><a href="#">Logout</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        <li><a href="{{ url_for('history') }}">Download History</a></li>
                         <li><a href="#">Your Home</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">About</a></li>
+                        <li><a href="{{ url_for('about') }}">About</a></li>
                       </ul>
                   {% endif %}
                 </li>

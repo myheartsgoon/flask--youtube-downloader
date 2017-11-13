@@ -1,4 +1,4 @@
-Dear new user,
+Dear {{ user }},
 Welcome to Flask Web!
 To confirm your account please click on the following link:
 {{ url_for('confirm', token=token, _external=True) }}

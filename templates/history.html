@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<title>Your Download History</title>
+
+<div class="container" >
+    <div class="row top-buffer">
+        {% if download_history %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <ul class="list-group">
+                <p><strong>Your Download History:</strong></p>
+                {% for download in download_history %}
+                    <li class="list-group-item">
+                        <p>  <a href="{{ download.url }}"> {{ download.title }} </a></p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
