@@ -57,3 +57,17 @@ class Youtube(db.Model):
         self.title = title
         self.url = url
         self.user_id = user_id
+
+
+class Convert(db.Model):
+    __tablename__ = 'convert'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    url = db.Column(db.String(500))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', backref=db.backref('convert'))
+
+    def __init__(self, title, url, user_id):
+        self.title = title
+        self.url = url
+        self.user_id = user_id

@@ -23,7 +23,7 @@ class ConvertForm(Form):
 
 
 class SearchVideoForm(Form):
-    keyword = StringField('Video Keyword', validators=[DataRequired('Please enter a keyword for swarch')], render_kw={"placeholder": "Enter keyword to search"})
+    keyword = StringField('Video Keyword', validators=[DataRequired('Please enter a keyword for search')], render_kw={"placeholder": "Enter keyword to search"})
     search = SubmitField('Search')
 
 

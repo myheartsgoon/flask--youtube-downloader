@@ -1,18 +1,18 @@
 # coding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, \
     Response, make_response
-from models import db, User, Youtube
+from models import db, User, Youtube, Convert
 from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm, SignupForm, LoginForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from datetime import timedelta
 from download_video import Download, Get_user_videos, Search_video
-from convert import convert_page_to_pdf
+from convert import Convert_to_PDF
 from send_mail import send_mail
 import os
-import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['YT_DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -92,12 +92,18 @@ def download():
         return render_template('download.html', download_url=download_url)
 
 
-@app.route('/history', methods=['GET'])
+@app.route('/youtube_history', methods=['GET'])
 @login_required
-def history():
+def youtube_history():
     download_history = current_user.youtube
-    return render_template('history.html', download_history=download_history)
+    return render_template('youtube_history.html', download_history=download_history)
 
+
+@app.route('/convert_history', methods=['GET'])
+@login_required
+def convert_history():
+    convert_history = current_user.convert
+    return render_template('convert_history.html', download_history=convert_history)
 
 
 @app.route('/convert', methods=['GET', 'POST'])
@@ -108,7 +114,13 @@ def convert():
             return render_template('convert.html', form=form)
         else:
             url = form.web_url.data
-            result = convert_page_to_pdf(url)
+            web_title = Convert_to_PDF(url).get_name()
+            filename = web_title + '.pdf'
+            if current_user.is_authenticated:
+                new_convert = Convert(web_title, url, current_user.id)
+                db.session.add(new_convert)
+                db.session.commit()
+            result = Convert_to_PDF(url).convert_page_to_pdf()
             if result == True:
                 pdf_link = url_for('downloadfile', filename='output.pdf', _external=True)
                 return render_template('convert.html', form=form, pdf_link=pdf_link)
