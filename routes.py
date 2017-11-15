@@ -103,7 +103,7 @@ def youtube_history():
 @login_required
 def convert_history():
     convert_history = current_user.convert
-    return render_template('convert_history.html', download_history=convert_history)
+    return render_template('convert_history.html', convert_history=convert_history)
 
 
 @app.route('/convert', methods=['GET', 'POST'])
