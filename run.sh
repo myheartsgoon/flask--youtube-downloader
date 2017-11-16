@@ -1,4 +1,4 @@
 #!/bin/bash
 
 chmod +x /app/wkhtmltox/bin/wkhtmltopdf
-gunicorn routes:app
+gunicorn --timeout 90 routes:app
