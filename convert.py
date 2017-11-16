@@ -7,7 +7,7 @@ options = {
     'quiet': '',
     'encoding': "UTF-8",
     }
-path_wkthmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+path_wkthmltopdf = '/app/wkhtmltox/bin/wkhtmltopdf'
 config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
 
 
