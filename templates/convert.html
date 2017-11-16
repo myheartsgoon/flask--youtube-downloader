@@ -10,6 +10,7 @@
                 <div class="form-group">
                     {{ form.hidden_tag() }}
                     {{ form.web_url.label }}:
+
                     {% if form.web_url.errors %}
                     <div class="alert alert-warning" role="alert">
                      {% for error in form.web_url.errors %}
@@ -17,6 +18,13 @@
                      {% endfor %}
                     </div>
                     {% endif %}
+
+                    {% if invalid %}
+                    <div class="alert alert-danger" role="alert">
+                     <p>Wrong URL, please enter a valid URL!</p>
+                    </div>
+                    {% endif %}
+
                     {% if failed %}
                     <div class="alert alert-danger" role="alert">
                      <p>Convert failed, please try again!</p>

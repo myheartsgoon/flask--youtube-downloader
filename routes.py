@@ -115,7 +115,8 @@ def convert():
         else:
             url = form.web_url.data
             web_title = Convert_to_PDF(url).get_name()
-            filename = web_title + '.pdf'
+            if web_title == 'invalid url':
+                return render_template('convert.html', form=form, invalid=True)
             result = Convert_to_PDF(url).convert_page_to_pdf()
             if result == True:
                 if current_user.is_authenticated:

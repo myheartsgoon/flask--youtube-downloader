@@ -1,6 +1,7 @@
 import pdfkit
 import requests
 from bs4 import BeautifulSoup
+import re
 
 options = {
     'quiet': '',
@@ -18,6 +19,9 @@ class Convert_to_PDF():
         try:
             if not self.url.startswith('http'):
                 self.url = 'http://' + self.url
+            if len(self.url.split('.')) == 1 \
+                or re.match(r'[0-9]+\.[0-9]+',self.url):
+                return 'invalid url'
             res = requests.get(self.url)
             html = BeautifulSoup(res.text, 'html.parser')
             return html.title.text
