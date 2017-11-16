@@ -116,12 +116,12 @@ def convert():
             url = form.web_url.data
             web_title = Convert_to_PDF(url).get_name()
             filename = web_title + '.pdf'
-            if current_user.is_authenticated:
-                new_convert = Convert(web_title, url, current_user.id)
-                db.session.add(new_convert)
-                db.session.commit()
             result = Convert_to_PDF(url).convert_page_to_pdf()
             if result == True:
+                if current_user.is_authenticated:
+                    new_convert = Convert(web_title, url, current_user.id)
+                    db.session.add(new_convert)
+                    db.session.commit()
                 pdf_link = url_for('downloadfile', filename='output.pdf', _external=True)
                 return render_template('convert.html', form=form, pdf_link=pdf_link)
             else:
