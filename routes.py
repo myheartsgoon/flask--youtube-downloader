@@ -1,6 +1,6 @@
 # coding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, \
-    Response, make_response
+    Response, make_response, g
 from models import db, User, Youtube, Convert
 from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm, SignupForm, LoginForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
@@ -23,6 +23,7 @@ login_manager.init_app(app)
 
 @app.before_request
 def make_session_permant():
+    g.next = None
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=5)
 
@@ -114,7 +115,7 @@ def convert():
             return render_template('convert.html', form=form)
         else:
             url = form.web_url.data
-            web_title = Convert_to_PDF(url).get_name()
+            web_title, new_url = Convert_to_PDF(url).get_name()[0], Convert_to_PDF(url).get_name()[1],
             if web_title == 'invalid url':
                 return render_template('convert.html', form=form, invalid=True)
             result = Convert_to_PDF(url).convert_page_to_pdf()

@@ -24,7 +24,7 @@ class Convert_to_PDF():
                 return 'invalid url'
             res = requests.get(self.url)
             html = BeautifulSoup(res.text, 'html.parser')
-            return html.title.text
+            return (html.title.text, self.url)
         except Exception as e:
             return 'No title'
 
