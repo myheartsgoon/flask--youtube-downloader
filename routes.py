@@ -115,13 +115,13 @@ def convert():
             return render_template('convert.html', form=form)
         else:
             url = form.web_url.data
-            web_title, new_url = Convert_to_PDF(url).get_name()[0], Convert_to_PDF(url).get_name()[1],
-            if web_title == 'invalid url':
+            web_title, new_url = Convert_to_PDF(url).get_name()
+            if new_url == 'invalid':
                 return render_template('convert.html', form=form, invalid=True)
             result = Convert_to_PDF(url).convert_page_to_pdf()
             if result == True:
                 if current_user.is_authenticated:
-                    new_convert = Convert(web_title, url, current_user.id)
+                    new_convert = Convert(web_title, new_url, current_user.id)
                     db.session.add(new_convert)
                     db.session.commit()
                 pdf_link = url_for('downloadfile', filename='output.pdf', _external=True)

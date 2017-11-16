@@ -7,7 +7,7 @@ options = {
     'quiet': '',
     'encoding': "UTF-8",
     }
-path_wkthmltopdf = '/app/wkhtmltox/bin/wkhtmltopdf'
+path_wkthmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
 
 
@@ -21,12 +21,12 @@ class Convert_to_PDF():
                 self.url = 'http://' + self.url
             if len(self.url.split('.')) == 1 \
                 or re.match(r'[0-9]+\.[0-9]+',self.url):
-                return 'invalid url'
+                return ('invalid', 'invalid')
             res = requests.get(self.url)
             html = BeautifulSoup(res.text, 'html.parser')
             return (html.title.text, self.url)
         except Exception as e:
-            return 'No title'
+            return ('No title', self.url)
 
     def convert_page_to_pdf(self):
         try:
