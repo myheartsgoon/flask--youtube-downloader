@@ -7,24 +7,33 @@
         <h2>Login</h2>
         {{ form.hidden_tag() }}
 
+        {% if get_flashed_messages() %}
+        <div class="alert alert-warning" role="alert">
         {% for message in get_flashed_messages() %}
-            <p class="error-message">{{ message }}</p>
+          {{ message }}
         {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="col-xs-5" style="margin-right: 800px;">
           {{ form.email.label }}
           {% if form.email.errors %}
+          <div class="alert alert-warning" role="alert">
             {% for error in form.email.errors %}
-              <p class="has-error">{{ error }}</p>
+              {{ error }}
             {% endfor %}
+          </div>
           {% endif %}
           {{ form.email(class="form-control") }}
         </div>
         <div class="col-xs-5" style="margin-right: 800px;">
           {{ form.password.label }}
           {% if form.password.errors %}
+          <div class="alert alert-warning" role="alert">
             {% for error in form.password.errors %}
-              <p class="error-message">{{ error }}</p>
+              {{ error }}
             {% endfor %}
+          </div>
           {% endif %}
           {{ form.password(class="form-control") }}
         </div>

@@ -1,13 +1,13 @@
 import pdfkit
 import requests
 from bs4 import BeautifulSoup
-import re
+import re, os
 
 options = {
     'quiet': '',
     'encoding': "UTF-8",
     }
-path_wkthmltopdf = '/app/wkhtmltox/bin/wkhtmltopdf'
+path_wkthmltopdf = os.environ['PATH_PDF']
 config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
 
 
@@ -23,6 +23,7 @@ class Convert_to_PDF():
                 or re.match(r'[0-9]+\.[0-9]+',self.url):
                 return ('invalid', 'invalid')
             res = requests.get(self.url)
+            res.encoding = 'uft-8'
             html = BeautifulSoup(res.text, 'html.parser')
             return (html.title.text, self.url)
         except Exception as e:
