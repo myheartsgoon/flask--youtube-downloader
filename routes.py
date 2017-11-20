@@ -173,7 +173,7 @@ def search_video():
 def downloadfile(filename):
     response = make_response(send_from_directory('file',
                                filename, as_attachment=True))
-    response.headers["Content-Disposition"] = "attachment; filename={}".format(filename.encode().decode('latin-1'))
+    response.headers["Content-Disposition"] = "attachment; filename={}".format(filename)
     return response
 
 
