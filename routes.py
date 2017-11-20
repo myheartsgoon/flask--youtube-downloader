@@ -277,4 +277,4 @@ def page_not_found(error):
     return render_template('404.html'), 404
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=80)
+    app.run('0.0.0.0', port=8080,debug=True)
