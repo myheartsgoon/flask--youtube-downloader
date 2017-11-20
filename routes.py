@@ -68,7 +68,6 @@ def home():
             quality = video.get_resolution()
             name = video.get_name()
             return render_template('home.html', form=form, quality=quality, name=name, url=url)
-            #return redirect(url_for('download', quality=all_resolutions))
 
     elif request.method == 'GET':
         return render_template('home.html', form=form)
