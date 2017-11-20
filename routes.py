@@ -1,4 +1,4 @@
-# coding=utf-8
+# encoding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, \
     Response, make_response, g
 from models import db, User, Youtube, Convert
@@ -8,6 +8,8 @@ from datetime import timedelta
 from download_video import Download, Get_user_videos, Search_video
 from convert import Convert_to_PDF
 from send_mail import send_mail
+import unicodedata
+from werkzeug.urls import url_quote
 import os
 
 app = Flask(__name__)
@@ -173,7 +175,18 @@ def search_video():
 def downloadfile(filename):
     response = make_response(send_from_directory('file',
                                filename, as_attachment=True))
-    response.headers["Content-Disposition"] = "attachment; filename={}".format(filename)
+    try:
+        filename = filename.encode('latin-1')
+    except UnicodeEncodeError:
+        filenames = {
+            'filename': unicodedata.normalize('NFKD', filename).encode('latin-1', 'ignore'),
+            'filename*': "UTF-8''{}".format(url_quote(filename)),
+        }
+    else:
+        filenames = {'filename': filename}
+
+    response.headers.set('Content-Disposition', 'attachment', **filenames)
+    #response.headers["Content-Disposition"] = "attachment; filename={}".format(filename.encode().decode('latin-1'))
     return response
 
 
