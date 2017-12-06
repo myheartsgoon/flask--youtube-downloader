@@ -10,16 +10,15 @@ from convert import Convert_to_PDF
 from send_mail import send_mail
 import unicodedata
 from werkzeug.urls import url_quote
-import os
+import os, config
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['YT_DATABASE_URL']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config.from_object(config)
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = "login"
-login_manager.login_message = "Please login to access this page."
+login_manager.login_message = "该页面需要登陆"
 login_manager.init_app(app)
 
 
@@ -50,9 +49,6 @@ def unconfirmed():
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-app.secret_key = 'development-key'
-
 
 
 #--------Direct download from URL----------
@@ -199,17 +195,27 @@ def signup():
         if not form.validate():
             return render_template("signup.html", form=form)
         email = form.email.data
-        user = User.query.filter_by(email=email).first()
-        if user is not None:
-            flash("Email has been used, please use another one!")
+        username = form.username.data
+        password1 = form.password1.data
+        password2 = form.password2.data
+        user_q = User.query.filter_by(username=username).first()
+        email_q = User.query.filter_by(email=email).first()
+        if user_q is not None:
+            flash("用户名已被使用，请重新输入")
+            return render_template("signup.html", form=form)
+        if email_q is not None:
+            flash("用户已被使用，请重新输入!")
+            return render_template("signup.html", form=form)
+        if password1 != password2:
+            flash("两次密码输入不一致，请检查后重新输入")
             return render_template("signup.html", form=form)
         else:
-            newuser = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
+            newuser = User(form.username.data, form.email.data, form.password1.data)
             db.session.add(newuser)
             db.session.commit()
             token = newuser.generate_confirmation_token()
-            send_mail(newuser.email, newuser.firstname, token)
-            return render_template('confirm.html', user=newuser.firstname)
+            send_mail(newuser.email, newuser.username, token)
+            return render_template('confirm.html', user=newuser.username)
     elif request.method == 'GET':
         return render_template("signup.html", form=form)
 
@@ -220,10 +226,10 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('home'))
     if current_user.confirm(token):
-        flash('You have confirmed your account. Thanks!')
+        flash('你已经成功激活了你的账户！')
         return render_template('welcome.html')
     else:
-        flash('The confirmation link is invalid or has expired.')
+        flash('激活链接无效或已过期，请重试。')
     return redirect(url_for('home'))
 
 
@@ -244,7 +250,7 @@ def login():
                 login_user(user, form.remember_me.data)
                 return redirect(session['next'] or url_for('home'))
             else:
-                flash('Email address or password incorrect!')
+                flash('邮箱或密码不正确！')
                 return render_template('login.html', form=form)
     elif request.method == 'GET':
         session['next'] = request.args.get('next')

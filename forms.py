@@ -1,42 +1,45 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Email, Length
 
-class GenerateForm(Form):
-    youtube_url = StringField('Youtube URL', validators=[DataRequired('Please enter a youtube video URL')], render_kw={"placeholder": "Enter youtube url"})
-    generate = SubmitField('Submit')
+class GenerateForm(FlaskForm):
+    youtube_url = StringField('Youtube链接', validators=[DataRequired('请输入Youtube链接')], render_kw={"placeholder": "Youtube链接"})
+    generate = SubmitField('提交')
 
 
-class SearchUserForm(Form):
-    user_acct = StringField('User Account', validators=[DataRequired('Please enter a user account')], render_kw={"placeholder": "Enter youtube user to search"})
-    get = SubmitField('Submit')
+class SearchUserForm(FlaskForm):
+    user_acct = StringField('Youtube账号', validators=[DataRequired('请输入Youtube账号')], render_kw={"placeholder": "Youtube账号"})
+    get = SubmitField('提交')
 
 
-class DownloadForm(Form):
-    quality = SelectField('Quality')
-    download = SubmitField('Submit')
+class DownloadForm(FlaskForm):
+    quality = SelectField('画质')
+    download = SubmitField('提交')
 
 
-class ConvertForm(Form):
-    web_url = StringField('Web URL', validators=[DataRequired('Please enter a valid web URL')], render_kw={"placeholder": "Enter url to convert"})
-    convert = SubmitField('Convert')
+class ConvertForm(FlaskForm):
+    web_url = StringField('网页链接', validators=[DataRequired('请输入有效的网页链接')], render_kw={"placeholder": "网页链接"})
+    convert = SubmitField('转换')
 
 
-class SearchVideoForm(Form):
-    keyword = StringField('Video Keyword', validators=[DataRequired('Please enter a keyword for search')], render_kw={"placeholder": "Enter keyword to search"})
-    search = SubmitField('Search')
+class SearchVideoForm(FlaskForm):
+    keyword = StringField('视频关键字', validators=[DataRequired('请输入视频关键字')], render_kw={"placeholder": "搜索关键字"})
+    search = SubmitField('搜索')
 
 
-class SignupForm(Form):
-    first_name = StringField('First name', validators=[DataRequired('Please enter your first name')])
-    last_name = StringField('Last name', validators=[DataRequired('Please enter your last name')])
-    email = StringField('Email', validators=[DataRequired('Please enter your email address'), Email('Please enter a valid email address')])
-    password = PasswordField('Password', validators=[DataRequired('Please enter your password'), Length(min=6, message='Password must be at least 6 character')])
-    submit = SubmitField('Sign up')
+class SignupForm(FlaskForm):
+    username = StringField('用户名', validators=[DataRequired('请输入用户名'), Length(max=20, message='用户名最长为25位')],
+                              render_kw={"placeholder": "用户名"})
+    email = StringField('邮箱', validators=[DataRequired('请输入你的邮箱'), Email('请输入有效的邮箱')], render_kw={"placeholder": "邮箱地址"})
+    password1 = PasswordField('密码', validators=[DataRequired('请输入密码'), Length(min=6, message='密码需至少为6位')],
+                              render_kw={"placeholder": "登陆密码"})
+    password2 = PasswordField('密码', validators=[DataRequired('请再次输入密码'), Length(min=6, message='密码需至少为6位')],
+                              render_kw={"placeholder": "再次输入登录密码"})
+    submit = SubmitField('注册')
 
 
-class LoginForm(Form):
-    email = StringField('Email', validators=[DataRequired('Please enter your email address'), Email('Please enter a valid email address')])
-    password = PasswordField('Password', validators=[DataRequired('Please enter your password')])
-    remember_me = BooleanField('Keep me logged in')
-    submit = SubmitField('Sign in')
+class LoginForm(FlaskForm):
+    email = StringField('邮箱', validators=[DataRequired('请输入你的邮箱'), Email('请输入有效的邮箱')], render_kw={"placeholder": "邮箱地址"})
+    password = PasswordField('密码', validators=[DataRequired('请输入密码')], render_kw={"placeholder": "登录密码"})
+    remember_me = BooleanField('记住我')
+    submit = SubmitField('登录')

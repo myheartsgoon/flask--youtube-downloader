@@ -6,12 +6,15 @@
 <div class="container" >
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
+
             <form method="POST" action="/">
                 <div class="form-group">
                     {{ form.hidden_tag() }}
-                    {{ form.youtube_url.label }}:
+                    <h3>下载Youtube视频</h3>
                     {% if form.youtube_url.errors %}
                     <div class="alert alert-warning" role="alert">
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
                      {% for error in form.youtube_url.errors %}
                       {{ error }}
                      {% endfor %}
@@ -19,7 +22,7 @@
                     {% endif %}
                     {{ form.youtube_url(class="form-control") }}
                 </div>
-                {{ form.generate(class="btn btn-primary btn-lg") }}
+                {{ form.generate(class="btn btn-primary btn-default") }}
             </form>
         </div>
     </div>
@@ -28,7 +31,7 @@
         {% if name %}
         <div class="col-xs-12 col-md-6 col-md-offset-3">
             <ul class="list-group">
-                <p><strong>Video Name:</strong></p>
+                <p><strong>视频名称:</strong></p>
                     <li class="list-group-item">
                         <p> {{ name }} </p>
                     </li>
@@ -41,7 +44,7 @@
         {% if quality %}
         <div class="col-xs-12 col-md-6 col-md-offset-3">
             <ul class="list-group">
-                <p><strong>Available Quality:</strong></p>
+                <p><strong>画质选择:</strong></p>
                 {% for each in quality %}
                     <li class="list-group-item">
                         <p> <a href="{{ url_for('download', extension=each[0], resolution=each[1], url=url) }}" class="bucket"> {{ each[0] }} {{ each[1] }} </a> </p>

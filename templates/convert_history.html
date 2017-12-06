@@ -4,9 +4,9 @@
 <title>Your Convert History</title>
 
 <div class="container" >
-    <div class="row top-buffer">
-        {% if convert_history %}
+    <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
+            {% if convert_history %}
             <ul class="list-group">
                 <p><strong>Your Convert History:</strong></p>
                 {% for convert in convert_history %}
@@ -15,10 +15,11 @@
                     </li>
                 {% endfor %}
             </ul>
+            {% else %}
+            <p class="lead">你还没有任何下载。试试<a href="{{ url_for('convert') }}">转换网页为PDF</a>?</p>
+            {% endif %}
         </div>
-        {% else %}
-        <p class="lead">You haven't convert any webpage yet.</p>
-        {% endif %}
+
     </div>
 </div>
 

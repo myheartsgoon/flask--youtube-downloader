@@ -7,6 +7,7 @@
         <!-- Bootstrap -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/stylish.css') }}">
         <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}" type="image/x-icon">
         <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
         <script src="{{ url_for('static', filename='js/jquery-3.2.1.js') }}"></script>
@@ -23,46 +24,49 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('home') }}">Youtube Gadget</a>
+                <!--<a class="navbar-brand" href="{{ url_for('home') }}">Youtube Gadget</a>-->
               </div>
 
 
                   <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="{{ url_for('home') }}">Home<span class="sr-only">(current)</span></a></li>
-                <li><a href="{{ url_for('convert') }}">Convert</a></li>
+                <!--<a class="navbar-brand" href="#">-->
+                  <!--<img alt="Brand" width="35" height="35" src="{{ url_for('static', filename='img/logo-6.png') }}">-->
+                <!--</a>-->
+                <a href="{{ url_for('home') }}" class="navbar-left logo"><img width="50" height="50" src="{{ url_for('static', filename='img/logo.png') }}"></a>
+                <li class="active"><a href="{{ url_for('home') }}">首页<span class="sr-only">(current)</span></a></li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">搜索<span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="{{ url_for('search_video') }}">Search Video</a></li>
-                    <li><a href="{{ url_for('search_user') }}">Search User</a></li>
+                    <li><a href="{{ url_for('search_video') }}">搜索视频</a></li>
+                    <li><a href="{{ url_for('search_user') }}">搜索用户</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#">Search channel</a></li>
+                    <li><a href="#">搜索频道</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#">Search ..</a></li>
+                    <li><a href="#">搜索..</a></li>
                   </ul>
+                  <li><a href="{{ url_for('convert') }}">转换</a></li>
+                  <li><a href="{{ url_for('about') }}">关于</a></li>
                 </li>
               </ul>
-              <form class="navbar-form navbar-right">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search video">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-              </form>
+
               <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                   {% if not current_user.is_authenticated %}
-                  <li><a href="{{ url_for('login') }}">Login</a></li>
-                  <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+                  <li><a href="{{ url_for('login') }}">登陆</a></li>
+                  <a href="{{ url_for('signup') }}" role="button" class="btn signup">注册</a>
                   {% else %}
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ current_user.firstname }} {{ current_user.lastname }}<span class="caret"></span></a>
+                    <!--<img class="img-rounded profile-thumbnail" src="{{ current_user.gravatar(size=40) }}">-->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img class="img-rounded profile-thumbnail user-icon-img" src="{{ current_user.gravatar(size=35) }}"> <span class="caret"></span>
+                    </a>
                        <ul class="dropdown-menu">
-                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                        <li><a href="{{ url_for('youtube_history') }}">Youtube History</a></li>
-                        <li><a href="{{ url_for('convert_history') }}">Convert History</a></li>
+                        <li><a href="{{ url_for('logout') }}">注销</a></li>
+                        <li><a href="{{ url_for('youtube_history') }}">Youtube下载历史</a></li>
+                        <li><a href="{{ url_for('convert_history') }}">网页转换历史</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{{ url_for('about') }}">About</a></li>
+                        <li><a href="#">用户中心</a></li>
                       </ul>
                   {% endif %}
                 </li>
@@ -70,9 +74,7 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
-
-    {% block content %}
-    {% endblock %}
-
+        {% block content %}
+        {% endblock %}
   </body>
 </html>

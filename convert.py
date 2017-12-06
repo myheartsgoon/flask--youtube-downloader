@@ -2,13 +2,9 @@ import pdfkit
 import requests
 from bs4 import BeautifulSoup
 import re, os
+from config import options, PATH_wkthmltopdf
 
-options = {
-    'quiet': '',
-    'encoding': "UTF-8",
-    }
-path_wkthmltopdf = os.environ['PATH_PDF']
-config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
+config = pdfkit.configuration(wkhtmltopdf=PATH_wkthmltopdf)
 
 
 class Convert_to_PDF():

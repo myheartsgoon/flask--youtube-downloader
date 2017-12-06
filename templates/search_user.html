@@ -9,9 +9,11 @@
             <form method="POST" action="/search_user">
                 <div class="form-group">
                     {{ form.hidden_tag() }}
-                    {{ form.user_acct.label }}:
+                    <h3>搜索Youtube用户</h3>
                     {% if form.user_acct.errors %}
                     <div class="alert alert-warning" role="alert">
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
                      {% for error in form.user_acct.errors %}
                       {{ error }}
                      {% endfor %}
@@ -19,7 +21,7 @@
                     {% endif %}
                     {{ form.user_acct(class="form-control") }}
                 </div>
-                {{ form.get(class="btn btn-primary btn-lg") }}
+                {{ form.get(class="btn btn-primary btn-default") }}
             </form>
 
         </div>

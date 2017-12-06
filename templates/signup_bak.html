@@ -1,31 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title>注册</title>
+<title>Create an account</title>
 
 <div class="container" >
     <div class="row">
-      <div class="col-xs-12 col-md-4 col-md-offset-4">
+      <div class="col-xs-12 col-md-6 col-md-offset-1 col-centered">
         <form method="POST" action="/signup">
-          <!--<div class="container">-->
+          <div class="container">
           <h3>注册</h3>
           {{ form.hidden_tag() }}
 
-          {% if get_flashed_messages() %}
-            <div class="alert alert-warning" role="alert">
-              {% for message in get_flashed_messages() %}
-              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-              <span class="sr-only">Error:</span>
-              {{ message }}
-              {% endfor %}
-            </div>
-            {% endif %}
+          <div class="col-xs-5" style="margin-right: 800px;">
+            {{ form.first_name.label }}
 
-          <!--<div class="col-xs-5" style="margin-right: 800px;">-->
-          <div class="input">
-            {% if form.username.errors %}
+            {% if form.first_name.errors %}
             <div class="alert alert-warning" role="alert">
-              {% for error in form.username.errors %}
+              {% for error in form.first_name.errors %}
               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
               <span class="sr-only">Error:</span>
                 {{ error }}
@@ -33,12 +24,28 @@
             </div>
             {% endif %}
 
-            {{ form.username(class="form-control") }}
+            {{ form.first_name(class="form-control") }}
           </div>
-          <!--</div>-->
 
-          <!--<div class="col-xs-5" style="margin-right: 800px;">-->
-          <div class="input">
+          <div class="col-xs-5" style="margin-right: 800px;">
+            {{ form.last_name.label }}
+
+            {% if form.last_name.errors %}
+            <div class="alert alert-warning" role="alert">
+              {% for error in form.last_name.errors %}
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+                {{ error }}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {{ form.last_name(class="form-control") }}
+          </div>
+
+          <div class="col-xs-5" style="margin-right: 800px;">
+            {{ form.email.label }}
+
             {% if form.email.errors %}
             <div class="alert alert-warning" role="alert">
               {% for error in form.email.errors %}
@@ -48,41 +55,38 @@
               {% endfor %}
             </div>
             {% endif %}
+
+            {% if get_flashed_messages() %}
+            <div class="alert alert-warning" role="alert">
+              {% for message in get_flashed_messages() %}
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+              {{ message }}
+              {% endfor %}
+            </div>
+            {% endif %}
+
             {{ form.email(class="form-control") }}
           </div>
-          <!--</div>-->
 
-          <!--<div class="col-xs-5" style="margin-right: 800px;">-->
-           <div class="input">
+          <div class="col-xs-5" style="margin-right: 800px;">
+            {{ form.password.label }}
 
-            {% if form.password1.errors %}
+            {% if form.password.errors %}
             <div class="alert alert-warning" role="alert">
-              {% for error in form.password1.errors %}
+              {% for error in form.password.errors %}
               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
               <span class="sr-only">Error:</span>
                 {{ error }}
               {% endfor %}
             </div>
             {% endif %}
-            {{ form.password1(class="form-control") }}
+
+            {{ form.password(class="form-control") }}
           </div>
 
-          <div class="input">
-
-            {% if form.password2.errors %}
-            <div class="alert alert-warning" role="alert">
-              {% for error in form.password2.errors %}
-              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-              <span class="sr-only">Error:</span>
-                {{ error }}
-              {% endfor %}
-            </div>
-            {% endif %}
-            {{ form.password2(class="form-control") }}
+          {{ form.submit(class="btn btn-primary btn-default", style="margin-top: 15px;margin-right: 600px;margin-left: 15px;") }}
           </div>
-
-          {{ form.submit(class="btn btn-primary btn-default button") }}
-          <!--</div>-->
         </form>
       </div>
     </div>

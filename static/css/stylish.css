@@ -2,3 +2,37 @@
 .top-buffer{
     margin-top:20px
 }
+
+.signup {
+    background-color: #3897f0;
+    border-radius: 4px;
+    color: #fff;
+    height: 34px;
+    margin-right: 24px;
+    margin-top: 7.5px;
+    padding-top: 7px;
+    padding-bottom: 5px
+
+}
+.signup {
+    border: 0;
+    cursor: pointer;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+}
+
+.btn-primary {
+    background-color: #3897f0 !important;
+    border-color: #3897f0
+
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #1775d6 !important;
+    border-color: #3897f0
+}

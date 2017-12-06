@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title>Convert any webpage into PDF</title>
+<title>转换网页为PDF</title>
 
 <div class="container" >
     <div class="row">
@@ -9,10 +9,12 @@
             <form method="POST" action="/convert">
                 <div class="form-group">
                     {{ form.hidden_tag() }}
-                    {{ form.web_url.label }}:
+                    <h3>转换网页为PDF</h3>
 
                     {% if form.web_url.errors %}
                     <div class="alert alert-warning" role="alert">
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
                      {% for error in form.web_url.errors %}
                       {{ error }}
                      {% endfor %}
@@ -21,18 +23,20 @@
 
                     {% if invalid %}
                     <div class="alert alert-warning" role="alert">
-                     <p>Please enter a valid web URL</p>
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
+                     请输入有效的网页链接!
                     </div>
                     {% endif %}
 
                     {% if failed %}
                     <div class="alert alert-danger" role="alert">
-                     <p>Convert failed, please try again!</p>
+                     <p>转换失败，请重试!</p>
                     </div>
                     {% endif %}
                     {{ form.web_url(class="form-control") }}
                 </div>
-                {{ form.convert(class="btn btn-primary btn-lg") }}
+                {{ form.convert(class="btn btn-primary btn-default") }}
             </form>
         </div>
     </div>
@@ -42,7 +46,7 @@
             {% if pdf_link %}
                 <ul class="list-group">
                         <li class="list-group-item">
-                            <p><strong>Download link:</strong></p>
+                            <p><strong>下载链接:</strong></p>
                             <a href="{{ pdf_link }}" class="bucket"> {{ pdf_link }} </a>
                         </li>
                     </ul>

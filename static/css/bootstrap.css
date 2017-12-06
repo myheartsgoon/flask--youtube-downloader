@@ -3115,7 +3115,7 @@ fieldset[disabled] .btn-default.focus {
 }
 .btn-primary {
   color: #fff;
-  background-color: #337ab7;
+  background-color: #3897f0 !important;
   border-color: #2e6da4;
 }
 .btn-primary:focus,
@@ -4277,6 +4277,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: 15px 15px;
   font-size: 18px;
   line-height: 20px;
+
 }
 .navbar-brand:hover,
 .navbar-brand:focus {

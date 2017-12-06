@@ -9,9 +9,11 @@
             <form method="POST" action="/search_video">
                 <div class="form-group">
                     {{ form.hidden_tag() }}
-                    {{ form.keyword.label }}:
+                    <h3>搜索Youtube视频</h3>
                     {% if form.keyword.errors %}
                     <div class="alert alert-warning" role="alert">
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
                      {% for error in form.keyword.errors %}
                       {{ error }}
                      {% endfor %}
@@ -19,7 +21,7 @@
                     {% endif %}
                     {{ form.keyword(class="form-control") }}
                 </div>
-                {{ form.search(class="btn btn-primary btn-lg") }}
+                {{ form.search(class="btn btn-primary btn-default") }}
             </form>
 
         </div>
