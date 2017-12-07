@@ -3,7 +3,7 @@ import os
 # Flask app config
 SQLALCHEMY_DATABASE_URI = os.environ['YT_DATABASE_URL']
 SQLALCHEMY_TRACK_MODIFICATIONS = True
-SECRET_KEY = os.urandom(24)
+SECRET_KEY = 'development-key'
 
 # Send email config
 MAIL_SERVER = 'smtp.qq.com'   # Mail server address

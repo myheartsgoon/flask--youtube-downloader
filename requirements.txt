@@ -1,6 +1,5 @@
 argparse==1.4.0
 blinker==1.4
-boto3==1.4.4
 BeautifulSoup4==4.5.3
 click==6.7
 Flask==0.12.2
