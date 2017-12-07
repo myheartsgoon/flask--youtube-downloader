@@ -248,7 +248,7 @@ def login():
             user = User.query.filter_by(email=email).first()
             if user is not None and user.check_password(password):
                 login_user(user, form.remember_me.data)
-                return redirect(session['next'] or url_for('home'))
+                return redirect(session.get('next') or url_for('home'))
             else:
                 flash('邮箱或密码不正确！')
                 return render_template('login.html', form=form)
