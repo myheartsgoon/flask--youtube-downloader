@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, request
 import hashlib
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -15,6 +16,7 @@ class User(UserMixin, db.Model):
     pwdhash = db.Column(db.String(100))
     confirmed = db.Column(db.Boolean, default=False)
     avatar_hash = db.Column(db.String(32))
+    join_time = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -73,6 +75,7 @@ class Youtube(db.Model):
     url = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', backref=db.backref('youtube'))
+    download_time = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, title, url, user_id):
         self.title = title
@@ -87,6 +90,7 @@ class Convert(db.Model):
     url = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', backref=db.backref('convert'))
+    convert_time = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, title, url, user_id):
         self.title = title

@@ -1,17 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title>Your Convert History</title>
+<title>网页转换历史</title>
 
 <div class="container" >
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
             {% if convert_history %}
             <ul class="list-group">
-                <p><strong>Your Convert History:</strong></p>
+                <h3>你的网页转换历史:</h3>
                 {% for convert in convert_history %}
                     <li class="list-group-item">
                         <p><a href="{{ convert.url }}"> {{ convert.title }} </a></p>
+                        <p>{{ convert.convert_time.strftime('%Y{y}%m{m}%d{d} %H:%M').format(y='年', m='月', d='日') }}</p>
                     </li>
                 {% endfor %}
             </ul>

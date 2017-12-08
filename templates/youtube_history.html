@@ -6,12 +6,13 @@
 <div class="container" >
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <h3>你的Youtube下载历史:</h3>
             {% if download_history %}
             <ul class="list-group">
-                <p><strong>你的Youtube下载历史:</strong></p>
                 {% for download in download_history %}
                     <li class="list-group-item">
                         <p><a href="{{ download.url }}"> {{ download.title }} </a></p>
+                        <p>{{ download.download_time.strftime('%Y{y}%m{m}%d{d} %H:%M').format(y='年', m='月', d='日') }}</p>
                     </li>
                 {% endfor %}
             </ul>
