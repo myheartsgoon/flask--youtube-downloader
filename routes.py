@@ -1,8 +1,11 @@
 # encoding=utf-8
 from flask import Flask, render_template, request, redirect, session, url_for, flash, send_from_directory, send_file, \
     Response, make_response, g
-from models import db, User, Youtube, Convert
-from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm, SignupForm, LoginForm
+from flask_dance.contrib.github import make_github_blueprint, github
+from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
+from flask_dance.consumer import oauth_authorized
+from models import db, User, Youtube, Convert, OAuth
+from forms import GenerateForm, SearchUserForm, ConvertForm, SearchVideoForm, SignupForm, LoginForm, OAuthForm
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from datetime import timedelta
 from download_video import Download, Get_user_videos, Search_video
@@ -20,7 +23,10 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = "login"
 login_manager.login_message = "该页面需要登陆"
 login_manager.init_app(app)
-
+github_blueprint = make_github_blueprint(client_id='c554930667ddac2389f5',
+                                         client_secret='563713ea1c1358b15441b12b040a445b576b1ea3', scope=['user:email'])
+app.register_blueprint(github_blueprint, url_prefix='/login')
+github_blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
 @app.before_request
 def make_session_permant():
@@ -35,14 +41,22 @@ def before_request():
         and not current_user.confirmed \
         and request.endpoint != 'confirm' \
         and request.endpoint != 'logout' \
-        and request.endpoint != 'unconfirmed':
+        and request.endpoint != 'unconfirmed'\
+        and request.endpoint != 'get_github':
         return redirect(url_for('unconfirmed'))
+
+
+@app.context_processor
+def get_avatar_url():
+    if session.get('avatar_url'):
+        return dict(avatar_url=session.get('avatar_url'))
+    return dict(avatar_url='')
 
 
 @app.route('/unconfirmed')
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     return render_template('unconfirmed.html')
 
 
@@ -51,28 +65,97 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+@app.route('/get_github')
+def get_github():
+    if not github.authorized:
+        return redirect(url_for('github.login'))
+
+    account_info = github.get('/user/emails')
+
+    if account_info.ok:
+        account_info_json = account_info.json()[0]
+        print(account_info_json)
+
+        return '<h1>Your Github name is {}'.format(account_info_json['email'])
+
+    return '<h1>Request failed!</h1>'
+
+@oauth_authorized.connect_via(github_blueprint)
+def github_logged_in(blueprint, token):
+    get_account = blueprint.session.get('/user')
+    get_email = blueprint.session.get('/user/emails')
+    if get_account.ok and get_email.ok:
+        account_info_json = get_account.json()
+        email_info = get_email.json()[0]
+        username = account_info_json['login']
+        avatar_url = account_info_json['avatar_url']
+        email = email_info['email']
+        session['avatar_url'] = avatar_url
+
+        user_q = User.query.filter_by(email=email).first()
+        if user_q is not None:
+            login_user(user_q)
+        else:
+            print('else')
+            session['username'] = username
+            session['email'] = email
+            return redirect(url_for('set_account'))
+    else:
+        print('failed')
+
+@app.route('/set_account', methods=['GET', 'POST'])
+def set_account():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = OAuthForm()
+    username = session['username']
+    email = session['email']
+    if request.method == 'POST':
+        if not form.validate():
+            return render_template('set_account.html', form=form, username=username)
+        else:
+            password1 = form.password1.data
+            password2 = form.password2.data
+            if password1 != password2:
+                flash("两次密码输入不一致，请检查后重新输入")
+                return render_template("set_account.html", form=form, username=username)
+            else:
+                user = User(username, email, password1)
+                user.confirmed = True
+                db.session.add(user)
+                db.session.commit()
+                login_user(user)
+                return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template('set_account.html', form=form, username=username)
+
+
+
 #--------Direct download from URL----------
-@app.route('/', methods=['GET', 'POST'])
-def home():
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/youtube', methods=['GET', 'POST'])
+def youtube():
     form = GenerateForm()
     if request.method == 'POST':
         if not form.validate():
-            return render_template('home.html', form=form)
+            return render_template('youtube.html', form=form)
         else:
             url = form.youtube_url.data
             video = Download(url)
             quality = video.get_resolution()
             name = video.get_name()
-            return render_template('home.html', form=form, quality=quality, name=name, url=url)
+            return render_template('youtube.html', form=form, quality=quality, name=name, url=url)
 
     elif request.method == 'GET':
-        return render_template('home.html', form=form)
+        return render_template('youtube.html', form=form)
 
 @app.route('/download', methods=['GET'])
 def download():
-    extension = request.args.get('extension')
-    resolution = request.args.get('resolution')
-    url = request.args.get('url')
+    extension, resolution, url = request.args.get('quality').split('&')
     files = os.listdir('file/')
     video = Download(url)
     video_name = (video.get_name() + '(%s)') % resolution
@@ -188,7 +271,7 @@ def downloadfile(filename):
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     form = SignupForm()
     if request.method == 'POST':
@@ -198,19 +281,19 @@ def signup():
         username = form.username.data
         password1 = form.password1.data
         password2 = form.password2.data
-        user_q = User.query.filter_by(username=username).first()
+        # user_q = User.query.filter_by(username=username).first()
         email_q = User.query.filter_by(email=email).first()
-        if user_q is not None:
-            flash("用户名已被使用，请重新输入")
-            return render_template("signup.html", form=form)
+        # if user_q is not None:
+        #     flash("用户名已被使用，请重新输入")
+        #     return render_template("signup.html", form=form)
         if email_q is not None:
-            flash("用户已被使用，请重新输入!")
+            flash("邮箱已被使用，请重新输入!")
             return render_template("signup.html", form=form)
         if password1 != password2:
             flash("两次密码输入不一致，请检查后重新输入")
             return render_template("signup.html", form=form)
         else:
-            newuser = User(form.username.data, form.email.data, form.password1.data)
+            newuser = User(username, email, password1)
             db.session.add(newuser)
             db.session.commit()
             token = newuser.generate_confirmation_token()
@@ -224,19 +307,19 @@ def signup():
 @login_required
 def confirm(token):
     if current_user.confirmed:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     if current_user.confirm(token):
         flash('你已经成功激活了你的账户！')
         return render_template('welcome.html')
     else:
         flash('激活链接无效或已过期，请重试。')
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     form = LoginForm()
     if request.method == 'POST':
@@ -248,7 +331,7 @@ def login():
             user = User.query.filter_by(email=email).first()
             if user is not None and user.check_password(password):
                 login_user(user, form.remember_me.data)
-                return redirect(session.get('next') or url_for('home'))
+                return redirect(session.get('next') or url_for('welcome_back'))
             else:
                 flash('邮箱或密码不正确！')
                 return render_template('login.html', form=form)
@@ -257,11 +340,23 @@ def login():
         return render_template('login.html', form=form)
 
 
+@app.route('/welcome_back')
+@login_required
+def welcome_back():
+    return render_template('welcome_back.html')
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
+
+
+@app.template_filter('get_emb_url')
+def get_emb_url(url):
+    vid = url.split('?v=')[1]
+    emb_url = "https://www.youtube.com/embed/" + vid
+    return emb_url
 
 
 '''
@@ -291,6 +386,7 @@ def about():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
 
 if __name__ == "__main__":
     app.run('0.0.0.0', port=8080,debug=True)

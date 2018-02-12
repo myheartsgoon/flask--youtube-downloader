@@ -6,13 +6,11 @@
 <div class="container" >
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
-            <form method="POST" action="/convert">
-                <div class="form-group">
-                    {{ form.hidden_tag() }}
-                    <h3>转换网页为PDF</h3>
-
-                    {% if form.web_url.errors %}
-                    <div class="alert alert-warning" role="alert">
+            <h3>转换网页为PDF</h3>
+            <form class="form-group" method="POST" action="/convert">
+                {% if form.web_url.errors %}
+                    <div class="alert alert-warning alert-dismissable fade in" role="alert">
+                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                      <span class="sr-only">Error:</span>
                      {% for error in form.web_url.errors %}
@@ -22,7 +20,8 @@
                     {% endif %}
 
                     {% if invalid %}
-                    <div class="alert alert-warning" role="alert">
+                    <div class="alert alert-warning alert-dismissable fade in" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                      <span class="sr-only">Error:</span>
                      请输入有效的网页链接!
@@ -30,13 +29,18 @@
                     {% endif %}
 
                     {% if failed %}
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger alert-dismissable fade in" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                      <p>转换失败，请重试!</p>
                     </div>
                     {% endif %}
+                <div class="input-group">
+                    {{ form.hidden_tag() }}
                     {{ form.web_url(class="form-control") }}
+                    <span class="input-group-btn">
+                        {{ form.convert(class="btn btn-primary btn-default") }}
+                   </span>
                 </div>
-                {{ form.convert(class="btn btn-primary btn-default") }}
             </form>
         </div>
     </div>
@@ -44,9 +48,9 @@
     <div class="row top-buffer">
         <div class="col-xs-12 col-md-6 col-md-offset-3">
             {% if pdf_link %}
+            <p><strong>下载链接:</strong></p>
                 <ul class="list-group">
                         <li class="list-group-item">
-                            <p><strong>下载链接:</strong></p>
                             <a href="{{ pdf_link }}" class="bucket"> {{ pdf_link }} </a>
                         </li>
                     </ul>

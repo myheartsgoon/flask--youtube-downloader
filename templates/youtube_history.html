@@ -12,12 +12,12 @@
                 {% for download in download_history %}
                     <li class="list-group-item">
                         <p><a href="{{ download.url }}"> {{ download.title }} </a></p>
-                        <p>{{ download.download_time.strftime('%Y{y}%m{m}%d{d} %H:%M').format(y='年', m='月', d='日') }}</p>
+                        <p class="create-time">{{ download.download_time.strftime('%Y{y}%m{m}%d{d} %H:%M').format(y='年', m='月', d='日') }}</p>
                     </li>
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="lead">你还没有任何下载。试试<a href="{{ url_for('home') }}">下载Youtube视频</a>?</p>
+            <p class="lead">你还没有任何下载。试试<a href="{{ url_for('youtube') }}">下载Youtube视频</a>?</p>
             {% endif %}
         </div>
     </div>

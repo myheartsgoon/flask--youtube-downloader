@@ -1,29 +1,35 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title>登陆</title>
+<title>设置密码</title>
 
 <div class="container" >
     <div class="row">
       <div class="col-xs-12 col-md-4 col-md-offset-4">
-        <form method="POST" action="/login">
-          <h3>登陆</h3>
+        <form method="POST" action="/set_account">
+          <!--<div class="container">-->
+          <h3>Hi，{{ username }}</h3>
+          <h3>请设置你的登陆密码</h3>
           {{ form.hidden_tag() }}
 
           {% if get_flashed_messages() %}
-          <div class="alert alert-warning alert-dismissable fade in" role="alert">
-          {% for message in get_flashed_messages() %}
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
-            {{ message }}
-          {% endfor %}
-          </div>
-          {% endif %}
-          <div class="input">
-            {% if form.email.errors %}
             <div class="alert alert-warning alert-dismissable fade in" role="alert">
-              {% for error in form.email.errors %}
+              {% for message in get_flashed_messages() %}
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+              {{ message }}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+
+          <!--<div class="col-xs-5" style="margin-right: 800px;">-->
+           <div class="input">
+
+            {% if form.password1.errors %}
+            <div class="alert alert-warning alert-dismissable fade in" role="alert">
+              {% for error in form.password1.errors %}
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
               <span class="sr-only">Error:</span>
@@ -31,14 +37,14 @@
               {% endfor %}
             </div>
             {% endif %}
-            {{ form.email(class="form-control") }}
+            {{ form.password1(class="form-control") }}
           </div>
 
-
           <div class="input">
-            {% if form.password.errors %}
+
+            {% if form.password2.errors %}
             <div class="alert alert-warning alert-dismissable fade in" role="alert">
-              {% for error in form.password.errors %}
+              {% for error in form.password2.errors %}
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
               <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
               <span class="sr-only">Error:</span>
@@ -46,18 +52,12 @@
               {% endfor %}
             </div>
             {% endif %}
-            {{ form.password(class="form-control") }}
+            {{ form.password2(class="form-control") }}
           </div>
 
           {{ form.submit(class="btn btn-primary btn-default btn-block button") }}
-          <div >
-            {{ form.remember_me }}
-            {{ form.remember_me.label(class="checkbox-inline") }}
-            <a class="oauth-login" href="{{ url_for('github.login') }}" title="Github登录" style="color: black">
-            <i class="fa fa-github fa-2x fa-fw"></i>
-            </a>
-          </div>
-      </form>
+          <!--</div>-->
+        </form>
       </div>
     </div>
 </div>

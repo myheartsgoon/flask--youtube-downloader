@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_dance.consumer.backend.sqla import OAuthConsumerMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -11,7 +12,7 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(25), unique=True)
+    username = db.Column(db.String(25))
     email = db.Column(db.String(120), unique=True)
     pwdhash = db.Column(db.String(100))
     confirmed = db.Column(db.Boolean, default=False)
@@ -25,6 +26,9 @@ class User(UserMixin, db.Model):
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(
                 self.email.encode('utf-8')).hexdigest()
+        # elif self.email is None:
+        #     self.avatar_hash =
+
 
     def set_password(self, password):
         self.pwdhash = generate_password_hash(password)
@@ -96,3 +100,9 @@ class Convert(db.Model):
         self.title = title
         self.url = url
         self.user_id = user_id
+
+class OAuth(OAuthConsumerMixin, db.Model):
+    __tablename__ = 'oauth'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', backref=db.backref('oauth'))

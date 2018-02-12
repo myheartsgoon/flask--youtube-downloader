@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<title>下载Youtube视频</title>
+
+<div class="container" >
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+
+            <form method="POST" action="/youtube">
+                <div class="form-group">
+                    {{ form.hidden_tag() }}
+                    <h3>下载Youtube视频</h3>
+                    {% if form.youtube_url.errors %}
+                    <div class="alert alert-warning" role="alert">
+                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                     <span class="sr-only">Error:</span>
+                     {% for error in form.youtube_url.errors %}
+                      {{ error }}
+                     {% endfor %}
+                    </div>
+                    {% endif %}
+                    {{ form.youtube_url(class="form-control") }}
+                </div>
+                {{ form.generate(class="btn btn-primary btn-default btn-block") }}
+            </form>
+        </div>
+    </div>
+
+    <div class="row top-buffer">
+        {% if name %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <p><strong>视频名称:</strong></p>
+            <ul class="list-group">
+                    <li class="list-group-item">
+                        <p> {{ name }} </p>
+                    </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        {% if quality %}
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <p><strong>画质选择:</strong></p>
+            <form action="{{ url_for('download') }}" method="GET">
+                {% for each in quality %}
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="quality" id="quality" value="{{ each[0] }}&{{ each[1] }}&{{ url }}" checked>
+                    {{ each[0] }} {{ each[1] }}
+                  </label>
+                  <!--<input type="hidden" name="resolution" value="{{ each[1] }}">-->
+                  <!--<input type="hidden" name="url" value="{{ url }}">-->
+                </div>
+                {% endfor %}
+                <input class="btn btn-primary btn-default" type="submit" value="下载">
+            </form>
+
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

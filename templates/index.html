@@ -1,20 +1,61 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title >Home</title>
-  <main class="hero-section">
-    <div class="container">
-      
-      <div class="section-content">
-        <h2>Discover places near you.</h2>
-      </div>
+<title>首页 - Youtube Gadget</title>
+<header class="business-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--<h1 class="tagline">Youtube Gadget</h1>-->
+                </div>
+            </div>
+        </div>
+    </header>
 
-      <div class="section-device">
-        <img src="static/img/device.png">
-      </div>
-      
-      <div class="clearfix"></div>
+    <!-- Page Content -->
+    <div class="container">
+
+        <hr>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1>Youtube Gadget</h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <a href="{{ url_for('search_video') }}"><img class="img-circle img-responsive img-center" src="{{ url_for('static', filename='img/youtube.png') }}" alt=""></a>
+                <h2>搜索Youtube视频</h2>
+                <p></p>
+            </div>
+            <div class="col-sm-4">
+                <a href="{{ url_for('youtube') }}"><img class="img-circle img-responsive img-center" src="{{ url_for('static', filename='img/download.png') }}" alt=""></a>
+                <h2>下载Youtube视频</h2>
+                <p></p>
+            </div>
+            <div class="col-sm-4">
+                <a href="{{ url_for('convert') }}"><img class="img-circle img-responsive img-center" src="{{ url_for('static', filename='img/pdf-2.png') }}" alt=""></a>
+                <h2>网页转换为PDF</h2>
+                <p></p>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!--&lt;!&ndash; Footer &ndash;&gt;-->
+        <!--<footer>-->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-12">-->
+                    <!--<p>Copyright &copy; Your Website 2014</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /.row &ndash;&gt;-->
+        <!--</footer>-->
 
     </div>
-  </main>
 {% endblock %}

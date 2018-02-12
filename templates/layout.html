@@ -8,12 +8,16 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/stylish.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/business-frontpage.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}">
         <link rel="icon" href="{{ url_for('static', filename = 'img/favicon.ico') }}" type="image/x-icon">
         <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
         <script src="{{ url_for('static', filename='js/jquery-3.2.1.js') }}"></script>
         <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   </head>
+
   <body>
       <nav class="navbar navbar-default">
           <div class="container-fluid">
@@ -24,7 +28,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <!--<a class="navbar-brand" href="{{ url_for('home') }}">Youtube Gadget</a>-->
+                <!--<a class="navbar-brand" href="{{ url_for('index') }}">Youtube Gadget</a>-->
               </div>
 
 
@@ -34,8 +38,9 @@
                 <!--<a class="navbar-brand" href="#">-->
                   <!--<img alt="Brand" width="35" height="35" src="{{ url_for('static', filename='img/logo-6.png') }}">-->
                 <!--</a>-->
-                <a href="{{ url_for('home') }}" class="navbar-left logo"><img width="50" height="50" src="{{ url_for('static', filename='img/logo.png') }}"></a>
-                <li class="active"><a href="{{ url_for('home') }}">首页<span class="sr-only">(current)</span></a></li>
+                <a href="{{ url_for('index') }}" class="navbar-left logo"><img width="50" height="50" src="{{ url_for('static', filename='img/logo.png') }}"></a>
+                <li class="active"><a href="{{ url_for('index') }}">首页<span class="sr-only">(current)</span></a></li>
+                <li><a href="{{ url_for('youtube') }}">下载Youtube<span class="sr-only"></span></a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">搜索<span class="caret"></span></a>
                   <ul class="dropdown-menu">
@@ -46,35 +51,116 @@
                     <li role="separator" class="divider"></li>
                     <li><a href="#">搜索..</a></li>
                   </ul>
-                  <li><a href="{{ url_for('convert') }}">转换</a></li>
+                  <li><a href="{{ url_for('convert') }}">转换网页</a></li>
                   <li><a href="{{ url_for('about') }}">关于</a></li>
                 </li>
               </ul>
+
+
 
               <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                   {% if not current_user.is_authenticated %}
                   <li><a href="{{ url_for('login') }}">登陆</a></li>
                   <a href="{{ url_for('signup') }}" role="button" class="btn signup">注册</a>
-                  {% else %}
-                    <!--<img class="img-rounded profile-thumbnail" src="{{ current_user.gravatar(size=40) }}">-->
+                  {% elif not avatar_url=='' %}
+                  <!--<div class="oauth_user_icon">-->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img class="img-rounded profile-thumbnail user-icon-img" src="{{ current_user.gravatar(size=35) }}"> <span class="caret"></span>
+                        <img class="img-rounded profile-thumbnail user-icon-img oauth_user_icon" src="{{ avatar_url }}"> <span class="caret"></span>
                     </a>
-                       <ul class="dropdown-menu">
-                        <li><a href="{{ url_for('logout') }}">注销</a></li>
+                      <ul class="dropdown-menu">
                         <li><a href="{{ url_for('youtube_history') }}">Youtube下载历史</a></li>
                         <li><a href="{{ url_for('convert_history') }}">网页转换历史</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">用户中心</a></li>
+                        <li><a href="{{ url_for('logout') }}">退出登录</a></li>
+                      </ul>
+                  <!--</div>-->
+                  {% else %}
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img class="img-rounded profile-thumbnail user-icon-img" src="{{ current_user.gravatar(size=35) }}"> <span class="caret"></span>
+                    </a>
+                       <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('youtube_history') }}">Youtube下载历史</a></li>
+                        <li><a href="{{ url_for('convert_history') }}">网页转换历史</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">用户中心</a></li>
+                        <li><a href="{{ url_for('logout') }}">退出登录</a></li>
                       </ul>
                   {% endif %}
                 </li>
               </ul>
+
+              <form class="navbar-form navbar-right" action="{{ url_for('search_video') }}" method="POST">
+                <div class="col-xs-6 col-md-12">
+                <div class="input-group">
+                  <input type="text" class="form-control input-sm" placeholder="搜索视频...">
+                  <div class="input-group-btn">
+                        <button class="btn btn-default btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                  </div>
+                </div>
+                </div>
+                <!--<button type="submit" class="btn btn-primary btn-default"><i class="fa fa-envelope fa-2x fa-fw"></i></button>-->
+              </form>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
         {% block content %}
         {% endblock %}
+
+   <script>
+      var items = Array.apply(null, Array(20)).map(function(){return {show: false}})
+      new Vue({
+          el: '#showvid',
+          data: {items},
+          methods:{
+                ChangeValue: function(index){
+                    value = !(this.items[index].show);
+                    this.items.splice(index, 1, {show: value})
+                }
+            }
+        });
+  </script>
+  <!-- Footer -->
+    <footer class="footer bg-light">
+      <div class="container">
+        <div class="row top-buffer">
+          <div class="col-xs-12 col-md-12 h-100 text-center text-lg-left my-auto">
+            <ul class="list-inline mb-2">
+              <li class="list-inline-item">
+                <a href="{{ url_for('about') }}">关于</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="#">联系方式</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="#">使用说明</a>
+              </li>
+            </ul>
+
+              <ul class="list-inline mb-0">
+              <li class="list-inline-item mr-3">
+                <a href="https://weibo.com/myheartsgoon" title="微博">
+                  <i class="fa fa-weibo fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="https://github.com/myheartsgoon/flask--youtube-downloader" title="Github">
+                  <i class="fa fa-github fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="mailto:myheartsgoon@gmail.com", title="Email">
+                  <i class="fa fa-envelope fa-2x fa-fw"></i>
+                </a>
+              </li>
+            </ul>
+            <p class="text-muted small mb-4 mb-lg-0">&copy; Youtube Gadget 2017. All Rights Reserved.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

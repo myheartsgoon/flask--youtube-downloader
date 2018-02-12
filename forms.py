@@ -43,3 +43,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('密码', validators=[DataRequired('请输入密码')], render_kw={"placeholder": "登录密码"})
     remember_me = BooleanField('记住我')
     submit = SubmitField('登录')
+
+class OAuthForm(FlaskForm):
+    password1 = PasswordField('密码', validators=[DataRequired('请输入密码'), Length(min=6, message='密码需至少为6位')],
+                              render_kw={"placeholder": "登陆密码"})
+    password2 = PasswordField('密码', validators=[DataRequired('请再次输入密码'), Length(min=6, message='密码需至少为6位')],
+                              render_kw={"placeholder": "再次输入登录密码"})
+    submit = SubmitField('设置')
