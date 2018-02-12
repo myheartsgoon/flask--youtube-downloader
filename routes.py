@@ -13,10 +13,13 @@ from convert import Convert_to_PDF
 from send_mail import send_mail
 import unicodedata
 from werkzeug.urls import url_quote
+from werkzeug.contrib.fixers import ProxyFix
 import os, config
 
 app = Flask(__name__)
 app.config.from_object(config)
+# wrap application with Werkzueg’s ProxyFix middleware for Heroku
+app.wsgi_app = ProxyFix(app.wsgi_app)
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -389,4 +392,4 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=8080,debug=True)
+    app.run('0.0.0.0', port=8080)

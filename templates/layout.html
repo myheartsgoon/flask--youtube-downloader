@@ -18,6 +18,10 @@
         <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   </head>
 
+  <script>
+
+  </script>
+
   <body>
       <nav class="navbar navbar-default">
           <div class="container-fluid">
@@ -92,15 +96,12 @@
               </ul>
 
               <form class="navbar-form navbar-right" action="{{ url_for('search_video') }}" method="POST">
-                <div class="col-xs-6 col-md-12">
                 <div class="input-group">
                   <input type="text" class="form-control input-sm" placeholder="搜索视频...">
                   <div class="input-group-btn">
                         <button class="btn btn-default btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                   </div>
                 </div>
-                </div>
-                <!--<button type="submit" class="btn btn-primary btn-default"><i class="fa fa-envelope fa-2x fa-fw"></i></button>-->
               </form>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -109,10 +110,12 @@
         {% endblock %}
 
    <script>
-      var items = Array.apply(null, Array(20)).map(function(){return {show: false}})
+      var items = Array.apply(null, Array(40)).map(function(){return {show: false}})
       new Vue({
           el: '#showvid',
-          data: {items},
+          data: {
+                items
+          },
           methods:{
                 ChangeValue: function(index){
                     value = !(this.items[index].show);
