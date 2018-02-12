@@ -3,7 +3,7 @@ blinker==1.4
 BeautifulSoup4==4.5.3
 click==6.7
 Flask==0.12.2
-Flask-Dance=0.13.0
+Flask-Dance==0.13.0
 Flask-Login==0.4.0
 Flask-Mail==0.9.1
 Flask-Migrate==2.1.1
