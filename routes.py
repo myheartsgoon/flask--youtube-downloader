@@ -111,8 +111,10 @@ def set_account():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = OAuthForm()
-    username = session['username']
-    email = session['email']
+    username = session.get('username')
+    email = session.get('email')
+    if username is None or email is None:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         if not form.validate():
             return render_template('set_account.html', form=form, username=username)

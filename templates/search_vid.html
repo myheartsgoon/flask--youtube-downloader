@@ -46,14 +46,16 @@
                         <p><a href="{{ item[1] }}" class=""> {{ item[1] }}</a></p>
                         {% if not item[2] == 'Youtube_Channel' %}
                         <p>Uploaded by {{ item[2] }}</p>
-                        <p><a href="{{ url_for('search_video') }}" class="">下载</a></p>
-                        <div>
+                        <div style="margin-top: 8px;">
+                          <a href="#" title="下载">
+                              <i class="fa fa-download fa-lg fa-fw" aria-hidden="true"></i>
+                          </a>
                           <button class="btn btn-primary btn-default" v-on:click="ChangeValue({{loop_index}})" v-if="items[{{loop_index}}].show">
-                            收起
+                            <i class="fa fa-video-camera fa-lg fa-fw" aria-hidden="true"></i>
                           </button>
-                          <button class="btn btn-primary btn-default" v-on:click="ChangeValue({{loop_index}})" v-else>
-                            观看
-                          </button>
+                          <a v-on:click="ChangeValue({{loop_index}})" v-else>
+                            <i class="fa fa-video-camera fa-lg fa-fw" aria-hidden="true"></i>
+                          </a>
                           <transition name="fade">
                             <p v-if="items[{{loop_index}}].show">
                                 <iframe width="523" height="315" src="{{ item[1] | get_emb_url }}" frameborder="0" allowfullscreen></iframe>
