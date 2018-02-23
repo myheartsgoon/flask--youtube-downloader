@@ -23,7 +23,10 @@ class Get_user_videos():
 
 class Download():
     def __init__(self, link):
-        self.link = link
+        if not link.startswith('https://www.youtube.com/watch?v='):
+            self.link = 'Invalid'
+        else:
+            self.link = link
         self.extension = ''
         self.resolutions = set()
 
@@ -38,10 +41,13 @@ class Download():
         video.download('file/')
 
     def get_resolution(self):
-        yt = YouTube(self.link)
-        all_info = yt.get_videos()
-        quality = [(i.extension, i.resolution) for i in all_info]
-        return quality
+        try:
+            yt = YouTube(self.link)
+            all_info = yt.get_videos()
+            quality = [(i.extension, i.resolution) for i in all_info]
+            return quality
+        except:
+            return "Error"
 
 
 class Search_video():

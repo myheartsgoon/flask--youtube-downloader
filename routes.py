@@ -139,8 +139,8 @@ def set_account():
 #--------Direct download from URL----------
 @app.route('/')
 def index():
-    return render_template('index.html')
-
+    # return render_template('index.html')
+    return redirect(url_for('youtube'))
 
 @app.route('/youtube', methods=['GET', 'POST'])
 def youtube():
@@ -151,7 +151,13 @@ def youtube():
         else:
             url = form.youtube_url.data
             video = Download(url)
+            if video.link == "Invalid":
+                flash("请输入有效的Youtube链接")
+                return render_template('youtube.html', form=form)
             quality = video.get_resolution()
+            if quality == "Error":
+                flash("请输入有效的Youtube链接")
+                return render_template('youtube.html', form=form)
             name = video.get_name()
             return render_template('youtube.html', form=form, quality=quality, name=name, url=url)
 
